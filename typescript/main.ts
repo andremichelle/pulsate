@@ -39,7 +39,7 @@ const showProgress = (() => {
     main.appendChild(meter)
 
     let introVisible = true
-    window.addEventListener("mousedown", event => {
+    window.addEventListener("pointerdown", event => {
         const rect = canvas.getBoundingClientRect()
         const mx = event.clientX - rect.x
         const my = event.clientY - rect.y
