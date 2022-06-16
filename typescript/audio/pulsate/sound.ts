@@ -42,7 +42,6 @@ export class PulsateSound {
 
     constructor(context: AudioContext, solver: PulsateSolver, buffer: AudioBuffer) {
         this.sequencer = new Sequencer(context)
-
         this.meterWorklet = new StereoMeterWorklet(context)
 
         const masterGain = context.createGain()
@@ -50,7 +49,6 @@ export class PulsateSound {
         const convolverNode = context.createConvolver()
         convolverNode.buffer = buffer
         const limiterWorklet = new LimiterWorklet(context)
-
         masterGain.connect(limiterWorklet)
         convolverNode.connect(limiterWorklet)
         echo(context, masterGain, convolverNode, 0.5, 0.7, 0.4)
