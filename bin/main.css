@@ -1,0 +1,268 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+  font-family: "Open Sans", sans-serif;
+  -webkit-overflow-scrolling: touch;
+  touch-action: manipulation;
+  color: #eaeaea;
+  background-color: #1A1A1A;
+}
+
+html {
+  width: -webkit-fill-available;
+  height: -webkit-fill-available;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 100vw;
+  min-height: 100vh;
+  /* mobile viewport bug fix */
+  min-width: -webkit-fill-available;
+  min-height: -webkit-fill-available;
+}
+
+* {
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.invisible {
+  visibility: hidden !important;
+}
+
+svg.preloader {
+  --percentage: 0.0;
+  --radius: 7;
+  top: 50%;
+  left: 50%;
+  width: 64px;
+  height: 64px;
+  transform: translate(-50%, -50%);
+  position: absolute;
+}
+svg.preloader.error circle {
+  stroke: #C30;
+}
+svg.preloader > circle.progress {
+  stroke-dasharray: calc(var(--radius) * 6.2831853);
+  stroke-dashoffset: calc(var(--radius) * 6.2831853 * (1 - var(--percentage)));
+}
+
+button {
+  color: rgba(255, 255, 255, 0.4);
+  fill: currentColor;
+  font-size: 11px;
+  font-family: "Open Sans", sans-serif;
+  height: 21px;
+  line-height: 21px;
+  min-width: 21px;
+  border-radius: 2px;
+  text-align: center;
+  appearance: none;
+  padding: 0;
+  border: none;
+  outline: none;
+  background-color: rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  pointer-events: all;
+}
+button:hover {
+  color: rgba(255, 255, 255, 0.6);
+}
+button:active {
+  color: white;
+}
+button:disabled {
+  opacity: 0.3;
+}
+
+label.checkbox {
+  border: none;
+  outline: none;
+  white-space: nowrap;
+  appearance: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+label.checkbox input[type=checkbox] {
+  appearance: none;
+  display: none;
+}
+label.checkbox.slider {
+  min-height: 15px;
+  max-height: 15px;
+  width: 32px;
+  border-radius: 15px !important;
+  font-size: 12px;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+label.checkbox.slider span {
+  top: 3px;
+  left: 3px;
+  right: unset;
+  width: 9px;
+  height: 9px;
+  border-radius: 11px;
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.4);
+}
+label.checkbox.slider input[type=checkbox]:checked + span {
+  left: unset;
+  right: 3px;
+}
+label.checkbox.toggle {
+  height: 16px;
+  font-size: 16px;
+}
+label.checkbox.toggle span.checked {
+  display: none;
+}
+label.checkbox.toggle span.unchecked {
+  display: block;
+}
+label.checkbox.toggle span svg {
+  fill: currentColor;
+}
+label.checkbox.toggle input[type=checkbox]:checked ~ span.checked {
+  display: block !important;
+}
+label.checkbox.toggle input[type=checkbox]:checked ~ span.unchecked {
+  display: none !important;
+}
+
+fieldset:disabled input, fieldset:disabled label, fieldset:disabled button {
+  opacity: 0.2;
+}
+
+input[type=text] {
+  height: 21px;
+  color: rgba(255, 255, 255, 0.7);
+  border: none;
+  outline: none;
+  margin: 0;
+  padding: 0;
+  font-size: 11px;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.3);
+  font-family: "Open Sans", sans-serif;
+  pointer-events: all;
+}
+input[type=text]:focus {
+  box-shadow: 0 0 0 1px rgba(39, 107, 174, 0.6) inset;
+}
+input[type=text]::selection {
+  background-color: #276bae;
+}
+
+select {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  border: none;
+  outline: none;
+  margin: 0;
+  padding: 0;
+  font-size: 11px;
+  background-color: rgba(0, 0, 0, 0.3);
+  appearance: none;
+}
+
+div.two-columns {
+  display: grid;
+  align-items: center;
+  grid-template-columns: minmax(80px, 1fr) 84px;
+  row-gap: 3px;
+  column-gap: 4px;
+  line-height: 21px;
+  height: min-content;
+}
+div.two-columns > * {
+  height: 21px;
+  overflow: hidden;
+  border-radius: 2px;
+}
+div.two-columns > .empty {
+  grid-column: 1/3;
+}
+div.two-columns label {
+  font-size: 11px;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.3);
+  text-align: right;
+}
+div.two-columns label.name {
+  padding-right: 4px;
+}
+div.two-columns label.bold {
+  font-weight: 700;
+}
+div.two-columns fieldset.stepper {
+  display: grid;
+  grid-template-columns: 21px 40px 21px;
+  column-gap: 1px;
+  font-size: 11px;
+  outline: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  pointer-events: all;
+}
+div.two-columns fieldset.stepper > button {
+  color: rgba(255, 255, 255, 0.2);
+  font-size: 7px;
+  font-family: "Open Sans", sans-serif;
+  width: 21px;
+  height: 21px;
+  text-align: center;
+  appearance: none;
+  border-radius: 0;
+  padding: 0;
+  border: none;
+  pointer-events: all;
+}
+div.two-columns fieldset.stepper > button:hover {
+  color: rgba(255, 255, 255, 0.6);
+}
+div.two-columns fieldset.stepper > button:active {
+  color: white;
+}
+
+main {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+main canvas {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+main p.intro {
+  top: 50%;
+  left: 50%;
+  color: orange;
+  font-size: 13px;
+  font-weight: normal;
+  text-align: center;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  transition: opacity 1s linear;
+}
+main p.intro.disappear {
+  opacity: 0;
+}
+
+/*# sourceMappingURL=main.css.map */

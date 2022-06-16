@@ -1,7 +1,11 @@
-import {Boot, newAudioContext, preloadImagesOfCssFile} from "./lib/boot.js"
 import {LimiterWorklet} from "./audio/limiter/worklet.js"
 import {MeterWorklet} from "./audio/meter/worklet.js"
-import {MetronomeWorklet} from "./audio/metronome/worklet.js"
+import {Circle, PulsateSolver} from "./audio/pulsate/math.js"
+import {PulsateRenderer} from "./audio/pulsate/renderer.js"
+import {PulsateSound} from "./audio/pulsate/sound.js"
+import {Boot, newAudioContext, preloadImagesOfCssFile} from "./lib/boot.js"
+import {Waiting} from "./lib/common.js"
+import {HTML} from "./lib/dom.js"
 
 const showProgress = (() => {
     const progress: SVGSVGElement = document.querySelector("svg.preloader")
@@ -21,18 +25,44 @@ const showProgress = (() => {
     const context = newAudioContext()
     boot.registerProcess(LimiterWorklet.loadModule(context))
     boot.registerProcess(MeterWorklet.loadModule(context))
-    boot.registerProcess(MetronomeWorklet.loadModule(context))
+    const impulse = boot.registerProcess(fetch('./impulse-reverb.wav').then(x => x.arrayBuffer()).then(x => context.decodeAudioData(x)))
     await boot.waitForCompletion()
+
+    const main = HTML.query('main')
+    const canvas: HTMLCanvasElement = HTML.query('canvas')
+    const renderer = new PulsateRenderer(canvas)
+    const solver = new PulsateSolver()
+    const sound = new PulsateSound(context, solver, impulse.get())
+    const meter = sound.domElement
+    meter.style.left = '50%'
+    meter.style.transform = 'translate(-50%, 24px)'
+    main.appendChild(meter)
+
+    let introVisible = true
+    window.addEventListener("mousedown", event => {
+        const rect = canvas.getBoundingClientRect()
+        const mx = event.clientX - rect.x
+        const my = event.clientY - rect.y
+        solver.circles.push(new Circle(mx, my, 0.0, 50.0 * devicePixelRatio))
+        if (introVisible) {
+            introVisible = false
+            ;(async () => {
+                const intro = HTML.query('p.intro')
+                intro.classList.add('disappear')
+                await Waiting.forTransitionComplete(intro)
+            })()
+        }
+    })
+    window.addEventListener("keydown", event => {
+        if (event.code === "Space") {
+            solver.clear()
+        }
+    })
+    sound.start()
 
     // --- BOOT ENDS ---
     const frame = () => {
-        document.querySelector(".center").textContent = `
-            menubar.visible: ${window.menubar.visible}\n
-            devicePixelRatio: ${window.devicePixelRatio}\n
-            screenTop: ${window.screenTop}, screenLeft: ${window.screenLeft}\n
-            iw: ${window.innerWidth}, ih: ${window.innerHeight}\n
-            saw: ${window.screen.availWidth}, sah: ${window.screen.availHeight}\n
-            sw: ${window.screen.width}, sh: ${window.screen.height}`
+        renderer.render(solver.circles)
         requestAnimationFrame(frame)
     }
     frame()
